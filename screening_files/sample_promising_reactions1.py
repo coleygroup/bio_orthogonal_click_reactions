@@ -128,7 +128,7 @@ def add_solvent_temp_column(df):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    promising_reactions = pd.read_csv('promising_synthetic_reactions2.csv')
+    promising_reactions = pd.read_csv('promising_synthetic_reactions1.csv')
     promising_reactions['smiles_dict'] = promising_reactions['rxn_smiles'].apply(lambda x: construct_smiles_dict(x))
     promising_reactions = expand_df_pred(promising_reactions)
 

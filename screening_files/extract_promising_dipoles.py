@@ -75,6 +75,16 @@ def get_molecule_lists(df_pred):
 
 
 def get_individual_stat_list(df_pred, molecule_list, type='dipole'):
+    """Get reaction statistics across the entire dataset for an individual molecule of a specific type
+
+    Args:
+        df_pred (pd.DataFrame): dataframe containing all the predictions
+        molecule_list (List[strings]): list of SMILES
+        type (str, optional): type of molecules. Defaults to 'dipole'.
+
+    Returns:
+        List: list of reaction statistics
+    """
     molecule_stat_list = []
 
     for molecule in molecule_list:
@@ -87,6 +97,16 @@ def get_individual_stat_list(df_pred, molecule_list, type='dipole'):
 
 
 def get_statistics(df_pred, dipole_list, dipolarophile_list):
+    """Get reaction statistics across the entire dataset
+
+    Args:
+        df_pred (pd.DataFrame): dataframe containing all the predictions
+        dipole_list (List): list of dipole SMILES
+        dipolarophile_list (List): list of dipolarophile SMILES
+
+    Returns:
+        (pd.DataFrame, pd.DataFrame): tuple of dataframes with dipole and dipolarophile statistics
+    """
     dipole_stat_list = get_individual_stat_list(df_pred, dipole_list, type='dipole')
     dipolarophile_stat_list = get_individual_stat_list(df_pred, dipolarophile_list, type='dipolarophile')
 
@@ -97,6 +117,16 @@ def get_statistics(df_pred, dipole_list, dipolarophile_list):
 
 
 def select_dipoles(df_dipole_stat, strongly_endothermic_dipoles, threshold_lower=26):
+    """Select dipoles that are not too reactive
+
+    Args:
+        df_dipole_stat (pd.DataFrame): dataframe containing statistics for the dipoles
+        strongly_endothermic_dipoles (List[string]): list of strongly endothermic dipole SMILES
+        threshold_lower (int, optional): threshold to apply. Defaults to 26.
+
+    Returns:
+        pd.Series: series of dipole SMILES
+    """
     num_dipoles = {}
 
     for threshold in range(18, 36, 2):
@@ -120,6 +150,14 @@ def select_dipoles(df_dipole_stat, strongly_endothermic_dipoles, threshold_lower
 
 
 def reindex_df(df):
+    """re-index a dataframe and rename old index as 'rxn_id'
+
+    Args:
+        df (pd.DataFrame): input dataframe
+
+    Returns:
+        pd.DataFrame: output dataframe
+    """
     df.reset_index(inplace=True)
     df = df.rename(columns= {'index':'rxn_id'})
 
