@@ -24,7 +24,7 @@ parser.add_argument('--n-fold', type=int, default=10,
 if __name__ == '__main__':
     # set up
     args = parser.parse_args()
-    logger = create_logger(args.input_file.split('/')[-1].split('_')[0])
+    logger = create_logger(args.csv_file.split('/')[-1].split('_')[0])
     df = pd.read_pickle(args.input_file)
     df_rxn_smiles = pd.read_csv(args.csv_file)
     n_fold = args.n_fold
