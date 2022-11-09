@@ -1,13 +1,14 @@
 import pandas as pd
 from rdkit import Chem
 from argparse import ArgumentParser
-import os
 import numpy as np
 
 
 parser = ArgumentParser()
-parser.add_argument('--predictions-file', type=str, required=True,
-                    help='input .csv file containing predicted reaction and activation energies')
+parser.add_argument('--promising-reactions-file', type=str, required=True,
+                    help='.csv file containing predicted reaction and activation energies for the promising reactions')
+parser.add_argument('--number_validation_dipoles', type=int, default=20,
+                    help='the number of validation dipoles to sample')
 
 
 def strip_mapnum(smiles):
@@ -128,7 +129,7 @@ def add_solvent_temp_column(df):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    promising_reactions = pd.read_csv('promising_synthetic_reactions1.csv')
+    promising_reactions = pd.read_csv(args.promising_reactions_file)
     promising_reactions['smiles_dict'] = promising_reactions['rxn_smiles'].apply(lambda x: construct_smiles_dict(x))
     promising_reactions = expand_df_pred(promising_reactions)
 

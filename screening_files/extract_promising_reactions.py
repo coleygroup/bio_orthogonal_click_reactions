@@ -1,8 +1,6 @@
 import pandas as pd
 from rdkit import Chem
 from argparse import ArgumentParser
-import os
-import numpy as np
 
 
 parser = ArgumentParser()
@@ -218,7 +216,6 @@ def add_solvent_temp_column(df):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    os.makedirs('bio_filter', exist_ok=True)
     df_pred = pd.read_csv(args.predictions_file)
 
     # save the dipole and dipolarophile separately in dataframe and then get corresponding lists
@@ -233,7 +230,7 @@ if __name__ == '__main__':
     df_dipolarophiles_selected = select_dipolarophiles(df_dipolarophile_stat, args.threshold_dipolarophiles)
     promising_reactions = get_final_filtered_rxn_smiles_synthetic(df_pred,
                                 df_dipolarophiles_selected.values.tolist(), args.threshold_reverse_barrier, args.max_g_act)
-    promising_reactions[['rxn_id', 'rxn_smiles', 'predicted_activation_energy', 'predicted_reaction_energy']].to_csv('promising_synthetic_reactions1.csv')
+    promising_reactions[['rxn_id', 'rxn_smiles', 'predicted_activation_energy', 'predicted_reaction_energy']].to_csv('promising_synthetic_reactions.csv')
     
     # print some summarizing statistics
     print(len(promising_reactions))
