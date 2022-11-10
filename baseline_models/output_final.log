@@ -1,0 +1,15 @@
+10-fold CV RMSE and MAE for linear regression: 7.725691866814108 5.936763093809153
+10-fold CV RMSE and MAE for k-nearest neighbors (fingerprints): 5.741362853136449 4.328262667763173
+Parameters used: {'lam': 0.30000000000000004, 'mu': 0.1, 'n': 4.0}
+Optimal parameters for RF -- descriptors: {'max_features': 0.5, 'min_samples_leaf': 2, 'n_estimators': 300}
+10-fold CV RMSE and MAE for RF -- descriptors: 5.057935406628635 3.727823796572622
+Parameters used: {'max_features': 0.5, 'min_samples_leaf': 2, 'n_estimators': 300}
+Optimal parameters for RF -- fingerprints: {'max_features': 0.30000000000000004, 'min_samples_leaf': 1, 'n_estimators': 600}
+10-fold CV RMSE and MAE for RF -- fingerprints: 4.759751771950862 3.4969170522132784
+Parameters used: {'max_features': 0.30000000000000004, 'min_samples_leaf': 1, 'n_estimators': 600}
+Optimal parameters for xgboost -- descriptors: {'gamma': 2.0, 'learning_rate': 0.1, 'max_depth': 9.0, 'min_child_weight': 6.0, 'n_estimators': 800.0}
+10-fold CV RMSE and MAE for xgboost -- descriptors: 5.0511103436588325 3.7812734847728855
+Parameters used: {'gamma': 2.0, 'learning_rate': 0.1, 'max_depth': 9.0, 'min_child_weight': 6.0, 'n_estimators': 800.0}
+Optimal parameters for xgboost -- fingerprints: {'gamma': 2.0, 'learning_rate': 0.2, 'max_depth': 9.0, 'min_child_weight': 8.0, 'n_estimators': 500.0}
+10-fold CV RMSE and MAE for xgboost -- fingerprints: 5.071686976093855 3.8417442354440468
+Parameters used: {'gamma': 2.0, 'learning_rate': 0.2, 'max_depth': 9.0, 'min_child_weight': 8.0, 'n_estimators': 500.0}
