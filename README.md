@@ -39,7 +39,7 @@ The complete workflow associated with this project can be broken down in the fol
       - Select promising synthetic reactions.
       - Sample a subset of the selected promising synthetic reactions, add the competing native reactions involving the dipoles present in this subset and compute the corresponding reaction profiles.
       - Add the newly computed reaction profiles to the dataset and start the next iteration.
-6. Once the dataset is sufficiently enriched with promising bio-orthogonal click reactions, train the model one last time on the final version. Then run through the steps of the active learning loop with relaxed selection criteria and generate final estimates for the bio-orthogonal click potential of the synthetic reactions.
+6. Once the dataset is sufficiently enriched with promising bio-orthogonal click reactions, train the model one last time on the final version. Then run through the steps of the active learning loop with relaxed selection criteria and generate final estimates for the bio-orthogonal click potential for each of the synthetic reactions in the search space.
 
 Below, the various auxiliary scripts, directories and repositories developed to (partially) automate this workflow are discussed.
 
@@ -71,7 +71,10 @@ where the `.csv` file, as well as the atom- and reaction-descriptor files are th
 
 ## Reaction SMILES generation of the search space
 
-All the files related to reaction SMILES generation can be found in the `rxn_smiles_gen` directory. (explain how to generate both bio and synthetic files etc.)
+The files related to reaction SMILES generation can be found in the `rxn_smiles_gen` directory. Dipole, as well as biofragment-based and synthetic dipolarophile lists can be found as `.csv` files in the `data_files` sub-directory. Additionally, the selected dipoles in the consecutive iterations are included as well. Reaction SMILES can be generated with the help of the `generate_rxn_smiles.py` script:
+```
+python generate_rxn_smiles.py --file-name-dipoles <csv input file for dipoles> --file-name-dipolarophiles <csv input file for dipolarophiles> --output-base-name <base name for the output files>  [--num-cores <number of cores>]
+```
 
 ##  Screening procedure
 
@@ -97,7 +100,6 @@ python sample_promising_reactions1.py --promising-reactions-file <.csv file cont
 ```
 python sample_promising_reactions2.py --promising-reactions-file <.csv file containing predicted reaction and activation energies for the promising reactions>
 ``` 
-
 
 ## References
 
