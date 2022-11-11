@@ -51,7 +51,7 @@ The scripts in this repository were also used to validate selected reactions in 
 
 ## QM descriptor generation
 
-A separate repository was set up for the high-throughput computation of QM descriptors. It can be accessed [here](https://github.com/coleygroup/dipolar_cycloaddition_dataset).
+A separate repository was set up for the high-throughput computation of QM descriptors. It can be accessed [here](https://github.com/tstuyver/QM_desc_autodE).
 
 ## Multitask QM-augmented GNN model
 
