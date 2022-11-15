@@ -20,4 +20,4 @@ if __name__ == '__main__':
     df_pred_val['rxn_smiles'] = df_pred_val['rxn_id'].apply(lambda x: df_rxn_smiles.loc[x]['rxn_smiles'])
 
     df_pred_val[['rxn_id', 'rxn_smiles', 'predicted_activation_energy', 'predicted_reaction_energy']].to_csv(
-        f'predictions_{args.predictions_file.split("/")[1].split("_")[0]}_round{args.iteration}.csv')
+        f'predictions_{args.predictions_file.split("/")[-1].split("_")[0]}_iteration{args.iteration}.csv')

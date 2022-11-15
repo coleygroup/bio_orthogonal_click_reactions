@@ -138,8 +138,7 @@ def select_dipoles(df_dipole_stat, strongly_endothermic_dipoles, threshold_lower
 
     retained_endothermic_dipoles = set(strongly_endothermic_dipoles) - set(df_dipole_stat['dipole_smiles'].values.tolist())
 
-    print(len(strongly_endothermic_dipoles))
-    print(len(retained_endothermic_dipoles))
+    print(f'\nNumber of strongly endothermic dipoles retained: {len(retained_endothermic_dipoles)}')
 
     selected_dipoles_list = list(set(df_dipole_stat[df_dipole_stat['G_act_min'] > threshold_lower]['dipole_smiles'].values.tolist() + 
                                         list(retained_endothermic_dipoles)))

@@ -181,7 +181,8 @@ def get_final_filtered_rxn_smiles_synthetic(df_pred, valid_dipolarophiles, min_r
     df_pred['final_filter'] = df_pred.apply(lambda x: filter_function(x['dipolarophile'], x['predicted_activation_energy'], 
                             x['predicted_reaction_energy'], valid_dipolarophiles, min_reverse_barrier, max_g_act), axis=1)
     
-    return df_pred[df_pred['final_filter']][['rxn_id', 'rxn_smiles', 'dipole', 'predicted_activation_energy', 'predicted_reaction_energy']]
+    return df_pred[df_pred['final_filter']][['rxn_id', 'rxn_smiles', 'dipole', 'dipolarophile', 
+                                            'predicted_activation_energy', 'predicted_reaction_energy']]
 
 
 def reindex_df(df):
@@ -233,7 +234,6 @@ if __name__ == '__main__':
     promising_reactions[['rxn_id', 'rxn_smiles', 'predicted_activation_energy', 'predicted_reaction_energy']].to_csv('promising_synthetic_reactions.csv')
     
     # print some summarizing statistics
-    print(len(promising_reactions))
-    print(len(dipole_list), len(df_dipolarophiles_selected.values.tolist()))
-    print(len(promising_reactions.dipole.unique()))
-
+    print(f'Number of promising reactions selected: {len(promising_reactions)}')
+    print(f'Number of unique dipoles selected: {len(promising_reactions.dipole.unique())}')
+    print(f'Number of unique dipolarophiles selected: {len(promising_reactions.dipolarophile.unique())}')
