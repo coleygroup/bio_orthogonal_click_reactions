@@ -82,20 +82,40 @@ For each of the screening steps, a script can be found in the `screening_files` 
 ```
 python get_pred.py --iteration <iteration of the active learning loop> --predictions-file <path to the (unprocessed) predictions file> --rxn-smiles-file <path to .csv file containing the reaction SMILES>
 ```
+In practice, the following command can be run to test this script within the repository (some of the data-files have been subsampled to reduce their size):
+```
+python get_pred.py --iteration 0 --predictions-file data_files/model_iteration0/bio_predictions.csv --rxn-smiles-file data_files/bio_reactions_data.csv
+```
+
 `extract_promising_dipoles.py` facilitates the selection of promising dipoles, i.e., dipoles which are not too reactive with native dipolarophiles:
 ```
 python extract_promising_dipoles.py --predictions-file <input .csv file containing predicted reaction and activation energies> [--threshold-lower <threshold to decide whether a dipole is too reactive with biofragments>]
 ```
 The retained dipoles -- together with some additional files containing summarizing statistics -- are stored in a newly generated folder, `bio_filter`, as a `.csv` file: `dipoles_above_treshold.csv`. This file can copied into the reaction SMILES generation folder (vide supra) to generate the (pre-filtered) synthetic search space of the active learning loop.
 
+In practice, the following command can be run to test this script within the repository (`get_pred.py` has to be run for both `bio_predictions.csv` and `synthetic_predictions.csv` first):
+```
+python extract_promising_dipoles.py --predictions-file predictions_bio_iteration0.csv
+```
+
 `extract_promising_reactions.py` facilitates the selection of promising synthetic reactions, i.e., selective reactions that are fast under physiological conditions and are more or less irreversible:
 ```
 python extract_promising_reactions.py --predictions-file <input .csv file containing predicted reaction and activation energies> [--threshold-dipolarophiles <threshold for the mean activation energy of a dipolarophile to gauge intrinsic reactivity>] [--threshold-reverse-barrier <threshold for the reverse barrier (to ensure irreversibility)>] [--max-g-act <maximal G_act for a dipole-dipolarophile combination to be considered suitable>]
 ```
-Finally, there are scripts for sampling of the promising reactions for validation. `sample_promising_reactions1.py` was used during the first iteration to select up to 5 promising synthetic reactions involving 1 out of 20 sampled dipoles. The selected synthetic reactions were subsequently complemented with the corresponding biologically inspired reactions involving the same dipoles. This script can be executed as follows:
+In practice, the following command can be run to test this script within the repository (some of the data-files have been subsampled to reduce their size):
 ```
-python sample_promising_reactions1.py --promising-reactions-file <.csv file containing predicted reaction and activation energies for the promising reactions> [--number_validation_dipoles <the number of validation dipoles to sample>]
+python extract_promising_reactions.py --predictions-file predictions_synthetic_iteration0.csv
 ```
+
+Finally, there are scripts for sampling of the promising reactions for validation. `sample_promising_reactions0.py` was used during the zeroth iteration to select up to 5 promising synthetic reactions involving 1 out of 20 sampled dipoles. The selected synthetic reactions were subsequently complemented with the corresponding biologically inspired reactions involving the same dipoles. This script can be executed as follows:
+```
+python sample_promising_reactions0.py --promising-reactions-file <.csv file containing predicted reaction and activation energies for the promising reactions> [--number-validation-dipoles <the number of validation dipoles to sample>]
+```
+In practice, the following command can be run to test this script within the repository (some of the data-files have been subsampled to reduce their size):
+```
+python sample_promising_reactions0.py --promising-reactions-file promising_synthetic_reactions.csv --number-validation-dipoles 10
+```
+
 `sample_promising_reactions2.py` was used during the second iteration to select all the promising dipoles which weren't considered as part of the first iteration, and for each of these dipoles, all the reactions involving non-cyclooctyne-based dipolarophiles were retained (since cyclooctynes were severly overrepresented in the first iteration). For the dipoles for which less than 5 reactions could be selected in this manner, reactions involving cyclooctyne as the dipolarophile were sampled until 5 reactions were reached. This script can be executed as follows:
 ```
 python sample_promising_reactions2.py --promising-reactions-file <.csv file containing predicted reaction and activation energies for the promising reactions>
