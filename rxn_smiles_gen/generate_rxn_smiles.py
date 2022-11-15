@@ -27,7 +27,7 @@ parser.add_argument(
 parser.add_argument(
     "--output-base-name", required=True, help="base name for the output files"
 )
-parser.add_argument("--num-cores", required=True, help="number of cores")
+parser.add_argument("--num-cores", required=False, default=48, help="number of cores")
 
 
 def get_smarts_list():
