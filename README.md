@@ -28,9 +28,9 @@ The complete workflow associated with this project can be broken down in the fol
 
 1. Define the search space of dipoles and dipolarophiles (both synthetic and biofragment-based examples), generate a representative dataset of cycloaddition reactions and compute the associated reaction profiles in a high-throughput manner ([link](https://github.com/coleygroup/dipolar_cycloaddition_dataset)).
 2. Compute QM descriptors for each dipole and dipolarophile in a high-throughput manner ([link](https://github.com/tstuyver/QM_desc_autodE)).
-3. Select an appropriate machine learning model architecture (here: GNN -> [link](xxx)).
+3. Select an appropriate machine learning model architecture (here: multitask GNN ensemble -> [link](xxx)).
 4. Generate an exhaustive list of reaction SMILES based on all dipole - biofragment-based dipolarophile combinations; generate the QM descriptor input for each generated reaction ([link](https://github.com/coleygroup/bio_orthogonal_click_reactions/blob/main/rxn_smiles_gen/generate_rxn_smiles.py)).
-5. Iterate through an active learning loop to refine the dataset (scripts can be found [here](https://github.com/coleygroup/bio_orthogonal_click_reactions/tree/main/screening_files)). This loop consists of the following steps:
+5. Iterate through an active learning loop to refine the dataset (auxiliary scripts can be found [here](https://github.com/coleygroup/bio_orthogonal_click_reactions/tree/main/screening_files)). This loop consists of the following steps:
       - Train an ML model on the current instance of the dataset.
       - Use the trained model to predict activation and reaction energies for all the biofragment-based, i.e., native, reactions.
       - Select promising dipoles for bio-orthogonal click applications based on the predictions made, i.e., retain only the dipoles which are not too reactive with the native dipolarophiles.
@@ -93,7 +93,7 @@ python extract_promising_dipoles.py --predictions-file <input .csv file containi
 ```
 The retained dipoles -- together with some additional files containing summarizing statistics -- are stored in a newly generated folder, `bio_filter`, as a `.csv` file: `dipoles_above_treshold.csv`. This file can copied into the reaction SMILES generation folder (vide supra) to generate the (pre-filtered) synthetic search space of the active learning loop.
 
-In practice, the following command can be run to test this script within the repository (`get_pred.py` has to be run for both `bio_predictions.csv` and `synthetic_predictions.csv` first):
+In practice, the following command can be run to test this script within the repository (note that `get_pred.py` has to be run for both `bio_predictions.csv` and `synthetic_predictions.csv` first):
 ```
 python extract_promising_dipoles.py --predictions-file predictions_bio_iteration0.csv
 ```
@@ -102,7 +102,7 @@ python extract_promising_dipoles.py --predictions-file predictions_bio_iteration
 ```
 python extract_promising_reactions.py --predictions-file <input .csv file containing predicted reaction and activation energies> [--threshold-dipolarophiles <threshold for the mean activation energy of a dipolarophile to gauge intrinsic reactivity>] [--threshold-reverse-barrier <threshold for the reverse barrier (to ensure irreversibility)>] [--max-g-act <maximal G_act for a dipole-dipolarophile combination to be considered suitable>]
 ```
-In practice, the following command can be run to test this script within the repository (some of the data-files have been subsampled to reduce their size):
+In practice, the following command can be run to test this script within the repository:
 ```
 python extract_promising_reactions.py --predictions-file predictions_synthetic_iteration0.csv
 ```
@@ -111,7 +111,7 @@ Finally, there are scripts for sampling of the promising reactions for validatio
 ```
 python sample_promising_reactions0.py --promising-reactions-file <.csv file containing predicted reaction and activation energies for the promising reactions> [--number-validation-dipoles <the number of validation dipoles to sample>]
 ```
-In practice, the following command can be run to test this script within the repository (some of the data-files have been subsampled to reduce their size):
+In practice, the following command can be run to test this script within the repository:
 ```
 python sample_promising_reactions0.py --promising-reactions-file promising_synthetic_reactions.csv --number-validation-dipoles 10
 ```
