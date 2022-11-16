@@ -426,5 +426,5 @@ if __name__ == "__main__":
         args.file_name_dipolarophiles,
         smarts_list,
         args.output_base_name,
-        int(args.num_of_cores),
+        int(args.num_cores),
     )
