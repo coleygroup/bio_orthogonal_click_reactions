@@ -1,4 +1,4 @@
-# Dipolar_cycloaddition_dataset
+# Bio_orthogonal_click_reactions
 This repository contains the code and auxiliary data associated to the "data-driven discovery of new bio-orthogonal click reactions" project. Code is provided "as-is". Minor edits may be required to tailor the scripts for different computational systems. Additionally, for some steps of the workflow, intermediate files need to be generated as a preliminary step (vide infra).
 
 ## Requirements
