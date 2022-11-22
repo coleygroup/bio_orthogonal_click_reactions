@@ -39,7 +39,7 @@ The complete workflow associated with this project can be broken down in the fol
       - Select promising synthetic reactions.
       - Sample a subset of the selected promising synthetic reactions, add the competing native reactions involving the dipoles present in this subset and compute the corresponding reaction profiles.
       - Add the newly computed reaction profiles to the dataset and start the next iteration.
-6. Once the dataset is sufficiently enriched with promising bio-orthogonal click reactions, train the model one last time on the final version. Then run through the steps of the active learning loop with relaxed selection criteria and generate final estimates for the bio-orthogonal click potential for each of the synthetic reactions in the search space ([link](xxx)).
+6. Once the dataset is sufficiently enriched with promising bio-orthogonal click reactions, train the model one last time on the final version. Then screen through the chemical space one last time with relaxed selection criteria and generate final estimates for the bio-orthogonal click potential for each of the synthetic reactions in the search space ([link](xxx)).
 
 Below, the various auxiliary scripts, directories and repositories developed to (partially) automate this workflow are discussed in more detail.
 
