@@ -1,12 +1,13 @@
 import pandas as pd
 from rdkit import Chem
 from argparse import ArgumentParser
+import os
 import numpy as np
 
 
 parser = ArgumentParser()
-parser.add_argument('--promising-reactions-file', type=str, required=True,
-                    help='.csv file containing predicted reaction and activation energies for the promising reactions')
+parser.add_argument('--predictions-file', type=str, required=True,
+                    help='input .csv file containing predicted reaction and activation energies')
 
 
 def strip_mapnum(smiles):
@@ -96,7 +97,7 @@ def check_cyclooctyne(rxn_smiles):
 
 
 def reindex_df(df):
-    """re-index a dataframe and rename old index as 'rxn_id'
+    """re-index a dataframe and reset 'rxn_id'
 
     Args:
         df (pd.DataFrame): input dataframe
@@ -104,6 +105,9 @@ def reindex_df(df):
     Returns:
         pd.DataFrame: output dataframe
     """
+    df = df[[column for column in df.columns if column != 'rxn_id']]
+    df.reset_index(inplace=True)
+    df = df[[column for column in df.columns if column != 'index']]
     df.reset_index(inplace=True)
     df = df.rename(columns= {'index':'rxn_id'})
 
@@ -127,7 +131,7 @@ def add_solvent_temp_column(df):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    promising_reactions = pd.read_csv(args.promising_reactions_file)
+    promising_reactions = pd.read_csv(args.predictions_file)
     promising_reactions['smiles_dict'] = promising_reactions['rxn_smiles'].apply(lambda x: construct_smiles_dict(x))
     promising_reactions = expand_df_pred(promising_reactions)
 
@@ -135,28 +139,52 @@ if __name__ == '__main__':
     print(len(promising_reactions.dipole.unique()))
 
     # extract dipoles already done
-    df_round1 = pd.read_csv('iteration_0_validation.csv')
+    df_round1 = pd.read_csv('../screening_iteration0/validation_iteration0/iteration_0_validation.csv')
     df_round1['smiles_dict'] = df_round1['rxn_smiles'].apply(lambda x: construct_smiles_dict(x))
     df_round1 = expand_df_pred(df_round1)
-    dipoles_already_done = list(df_round1.dipole.unique())
+    dipoles_already_done1 = list(df_round1.dipole.unique())
+    dipolarophiles_already_done1 = list(df_round1.dipolarophile.unique())  
+
+    df_round2 = pd.read_csv('../screening_iteration1/validation_iteration1/iteration_1_validation.csv')
+    df_round2['smiles_dict'] = df_round2['rxn_smiles'].apply(lambda x: construct_smiles_dict(x))
+    df_round2 = expand_df_pred(df_round2)
+    dipoles_already_done2 = list(df_round2.dipole.unique())
+    dipolarophiles_already_done2 = list(df_round2.dipolarophile.unique())    
+
+    dipoles_already_done = dipoles_already_done1 + dipoles_already_done2
+    dipolarophiles_already_done = dipolarophiles_already_done1 + dipolarophiles_already_done2
 
     # filter dipole list
     dipoles_not_yet_done = np.array(list(set(promising_reactions.dipole.unique()) - set(dipoles_already_done)))
-    print(len(dipoles_not_yet_done))
+    dipolarophiles_not_yet_done = np.array(list(set(promising_reactions.dipolarophile.unique()) - set(dipolarophiles_already_done)))
+    print(len(dipoles_not_yet_done), len(dipolarophiles_not_yet_done))
     df_reaction_list = []
 
     # check whether the dipolarophile is a cyclooctyne, because you already have plenty of those
     promising_reactions['cyclooctyne'] = promising_reactions['rxn_smiles'].apply(lambda x: check_cyclooctyne(x))
+    for dipole in dipoles_already_done:
+        print(f'{dipole}: {len(promising_reactions[promising_reactions["dipole"] == dipole])}')
     for dipole in dipoles_not_yet_done:
-        if len(promising_reactions[promising_reactions['dipole'] == dipole]) <= 5:
+        # if less then 10 synthetic reactions, sample all of them
+        if len(promising_reactions[promising_reactions['dipole'] == dipole]) <= 10:
             df_reaction_list.append(promising_reactions[promising_reactions['dipole'] == dipole])
-        elif len(promising_reactions[promising_reactions['dipole'] == dipole]) > 5:
+            n_already_sampled = len(promising_reactions[promising_reactions['dipole'] == dipole])
+        else:
+            # else, start by sampling all synthetic reactions that do not involve a cyclooctyne-based dipolarophile
             df_reaction_list.append(promising_reactions[promising_reactions['dipole'] == dipole][promising_reactions["cyclooctyne"] == False])
             n_already_sampled = len(promising_reactions[promising_reactions['dipole'] == dipole][promising_reactions["cyclooctyne"] == False])
-            if n_already_sampled < 5:
-                df_reaction_list.append(promising_reactions[promising_reactions['dipole'] == dipole][promising_reactions["cyclooctyne"] == True].sample(n = 5 - n_already_sampled))
-
-    df_synthetic_validation = pd.concat(df_reaction_list) 
-    df_biofrag_validation = get_filtered_rxn_smiles_biofrag(df_synthetic_validation.dipole.unique(), "bio/predictions_bio_iteration1.csv")
+            if n_already_sampled < 10:
+                # if less than 10 sampled this manner, then sample first additional reactions involving previously unseen cyclooctynes
+                promising_reactions_cyclooctyne = promising_reactions[promising_reactions['dipole'] == dipole][promising_reactions["cyclooctyne"] == True]
+                promising_reactions_cyclooctyne['dipolarophile_not_yet_done'] = promising_reactions_cyclooctyne['dipolarophile'].apply(lambda x: x in dipolarophiles_not_yet_done)
+                df_reaction_list.append(promising_reactions_cyclooctyne[promising_reactions_cyclooctyne['dipolarophile_not_yet_done'] == True])
+                n_already_sampled += len(promising_reactions_cyclooctyne[promising_reactions_cyclooctyne['dipolarophile_not_yet_done'] == True])
+                if n_already_sampled < 10:
+                    # if this doesn't bring you to 10 reactions, sample previously seen dipolarophiles
+                    df_reaction_list.append(promising_reactions_cyclooctyne[promising_reactions_cyclooctyne['dipole'] == dipole][promising_reactions_cyclooctyne['dipolarophile_not_yet_done'] == False].sample(
+                        n = 10 - n_already_sampled, random_state=2))
+    
+    df_synthetic_validation = pd.concat(df_reaction_list)
+    df_biofrag_validation = get_filtered_rxn_smiles_biofrag(df_synthetic_validation.dipole.unique(), "bio/predictions_bio_iteration2.csv")
     df_validation_combined = add_solvent_temp_column(reindex_df(pd.concat([df_synthetic_validation, df_biofrag_validation])))
-    df_validation_combined[['rxn_id', 'rxn_smiles', 'solvent', 'temp', 'predicted_activation_energy', 'predicted_reaction_energy']].to_csv('iteration_1_validation.csv')
+    df_validation_combined[['rxn_id', 'rxn_smiles', 'solvent', 'temp', 'predicted_activation_energy', 'predicted_reaction_energy']].to_csv('iteration_2_validation.csv')
