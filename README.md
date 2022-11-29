@@ -104,7 +104,7 @@ python extract_promising_reactions.py --predictions-file <input .csv file contai
 ```
 In practice, the following command can be run to test this script within the repository:
 ```
-python extract_promising_reactions.py --predictions-file predictions_synthetic_iteration0.csv
+python extract_promising_reactions.py --predictions-file data_files/predictions_synthetic_sample.csv
 ```
 
 Finally, there are scripts for sampling of the promising reactions for validation. `sample_promising_reactions0.py` was used during the zeroth iteration to select up to 5 promising synthetic reactions involving 1 out of 20 sampled dipoles. The selected synthetic reactions were subsequently complemented with the corresponding biologically inspired reactions involving the same dipoles. This script can be executed as follows:
@@ -113,7 +113,7 @@ python sample_promising_reactions0.py --promising-reactions-file <.csv file cont
 ```
 In practice, the following command can be run to test this script within the repository:
 ```
-python sample_promising_reactions0.py --promising-reactions-file promising_synthetic_reactions.csv --number-validation-dipoles 10
+python sample_promising_reactions0.py --promising-reactions-file promising_synthetic_reactions.csv --number-validation-dipoles 4
 ```
 
 `sample_promising_reactions2.py` was used during the second iteration to select all the promising dipoles which weren't considered as part of the first iteration, and for each of these dipoles, all the reactions involving non-cyclooctyne-based dipolarophiles were retained (since cyclooctynes were severly overrepresented in the first iteration). For the dipoles for which less than 5 reactions could be selected in this manner, reactions involving cyclooctyne as the dipolarophile were sampled until 5 reactions were reached. This script can be executed as follows:
