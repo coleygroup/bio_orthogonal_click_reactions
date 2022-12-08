@@ -78,7 +78,7 @@ python generate_rxn_smiles.py --file-name-dipoles <csv input file for dipoles> -
 
 ##  Screening procedure
 
-For each of the screening steps, a script can be found in the `screening_files` directory. Additionally, the `get_pred.py` script, which combines the outputted predictions of the (QM augmented) GNN model with the reaction SMILES from the generated reaction SMILES `.csv` file to yield input files for the screening scripts, can also be found in this repository. This script can be executed as follows:
+For each of the screening steps, a script can be found in the `active_learning` directory. Additionally, the `get_pred.py` script, which combines the outputted predictions of the (QM augmented) GNN model with the reaction SMILES from the generated reaction SMILES `.csv` file to yield input files for the screening scripts, can also be found in this directory. The latter script can be executed as follows:
 ```
 python get_pred.py --iteration <iteration of the active learning loop> --predictions-file <path to the (unprocessed) predictions file> --rxn-smiles-file <path to .csv file containing the reaction SMILES>
 ```
@@ -98,7 +98,7 @@ In practice, the following command can be run to test this script within the rep
 python extract_promising_dipoles.py --predictions-file predictions_bio_iteration0.csv
 ```
 
-`extract_promising_reactions.py` facilitates the selection of promising synthetic reactions, i.e., selective reactions that are fast under physiological conditions and are more or less irreversible:
+`extract_promising_reactions.py` facilitates the selection of promising synthetic reactions, i.e., selective reactions that are fast under physiological conditions and can be expected to be irreversible:
 ```
 python extract_promising_reactions.py --predictions-file <input .csv file containing predicted reaction and activation energies> [--threshold-dipolarophiles <threshold for the mean activation energy of a dipolarophile to gauge intrinsic reactivity>] [--threshold-reverse-barrier <threshold for the reverse barrier (to ensure irreversibility)>] [--max-g-act <maximal G_act for a dipole-dipolarophile combination to be considered suitable>]
 ```
@@ -120,6 +120,39 @@ python sample_promising_reactions0.py --promising-reactions-file promising_synth
 ```
 python sample_promising_reactions2.py --promising-reactions-file <.csv file containing predicted reaction and activation energies for the promising reactions>
 ``` 
+
+## Final screening
+
+All the scripts used for the final screening can be found in the `final_screening` directory. The first script, `extract_promising_dipoles.py`, facilitates the selection of promising dipoles, i.e., dipoles which are not too reactive with native dipolarophiles:
+```
+python extract_promising_dipoles.py --predictions-file <input .csv file containing predicted reaction and activation energies> [--threshold-lower <threshold to decide whether a dipole is too reactive with biofragments>]
+```
+The retained dipoles -- together with some additional files containing summarizing statistics -- are stored in a newly generated folder, `bio_filter_final`, as a `.csv` file: `dipoles_above_treshold.csv`.
+
+In practice, the following command can be run to test this script within the repository:
+```
+python extract_dipoles.py --predictions-file data_files/predictions_bio_final.csv
+```
+
+The second script, `filter_synthetic_reactions.py`, facilitates the selection of promising synthetic reactions, i.e., selective reactions that are fast under physiological conditions and can be expected to be irreversible: 
+
+```
+python filter_synthetic_reactions.py --predictions-file <input .csv file containing predicted reaction and activation energies> [--threshold-dipolarophiles <threshold for the mean activation energy of a dipolarophile to gauge intrinsic reactivity>] [--threshold-reverse-barrier <threshold for the reverse barrier (to ensure irreversibility)>] [--max-g-act <maximal G_act for a dipole-dipolarophile combination to be considered suitable>]
+```
+In practice, the following command can be run to test this script within the repository:
+```
+python filter_synthetic_reactions.py --predictions-file data_files/predictions_synthetic_final_sample.csv
+```
+The final script, `determine_potential.py` computes the bio-orthogonal potential, i.e., the energy difference between the activation energy for the synthetic reaction and the lowest activation energy of the dipole with any of the tested biologically inspired motifs:
+
+```
+python determine_potential.py --predictions-file <input .csv file containing predicted reaction and activation energies> --dipole-statistics-file <.csv file containing the statistics for the individual dipoles> [--output-file <.csv file to which the output of the screening will be written>]
+```
+In practice, the following command can be run to test this script within the repository:
+```
+python determine_potential.py --predictions-file filtered_synthetic_reactions.csv --dipole-statistics-file bio_filter_final/dipole_stat_biofrag.csv
+```
+The interactive plot can be generated by executing `interactive_plot.ipynb` 
 
 ## References
 
