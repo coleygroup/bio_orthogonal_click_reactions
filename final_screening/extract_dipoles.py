@@ -116,23 +116,27 @@ def get_statistics(df_pred, dipole_list, dipolarophile_list):
     return df_dipole_stat, df_dipolarophile_stat
 
 
-def get_statistics_endothermic(strongly_endothermic_dipoles):
+def get_statistics_endothermic(strongly_endothermic_dipoles, dipoles_already_covered):
     """Set the minimum G_act for strongly endothermic dipoles to 25 
     => every synthetic dipole - dipolarophile combination below this threshold 
     will be a good candidate for bio-orthogonal click chemistry
 
     Args:
         strongly_endothermic_dipoles (List): a list of strongly endothermic dipoles
+        dipoles_already_covered (List): a list of dipoles already covered
 
     Returns:
         pd.DataFrame: a dataframe with statistics
     """
     molecule_stat_list = []
 
+    strongly_endothermic_dipoles = list(set(strongly_endothermic_dipoles) - set(dipoles_already_covered))
+
     for dipole in strongly_endothermic_dipoles:
         molecule_stat_list.append([dipole, 25, 25, 0, 0, 0, 0])
 
     df_dipole_stat_endothermic = pd.DataFrame(molecule_stat_list, columns=['dipole_smiles', 'G_act_min', 'G_act_mean', 'G_act_st_dev', 'G_r_min', 'G_r_mean', 'G_r_std_dev'])
+    print(len(df_dipole_stat_endothermic))
 
     return df_dipole_stat_endothermic    
 
@@ -157,30 +161,11 @@ def select_dipoles(df_dipole_stat, threshold_lower=26):
     for key in num_dipoles.keys():
         print(f'Total number of dipoles with lowest barrier above {key} kcal/mol: {num_dipoles[key]}')
 
-    #retained_endothermic_dipoles = set(strongly_endothermic_dipoles) - set(df_dipole_stat['dipole_smiles'].values.tolist())
-
-    #print(f'\nNumber of strongly endothermic dipoles retained: {len(retained_endothermic_dipoles)}')
-
     selected_dipoles_list = df_dipole_stat[df_dipole_stat['G_act_min'] > threshold_lower]['dipole_smiles'].values.tolist() 
 
     selected_dipoles = pd.DataFrame(selected_dipoles_list, columns=['dipole_smiles'])
 
     return selected_dipoles
-
-
-def reindex_df(df):
-    """re-index a dataframe and rename old index as 'rxn_id'
-
-    Args:
-        df (pd.DataFrame): input dataframe
-
-    Returns:
-        pd.DataFrame: output dataframe
-    """
-    df.reset_index(inplace=True)
-    df = df.rename(columns= {'index':'rxn_id'})
-
-    return df
 
 
 if __name__ == '__main__':
@@ -206,7 +191,8 @@ if __name__ == '__main__':
     
     # get statistics for each dipole and save them to corresponding files
     df_dipole_stat, _ = get_statistics(df_pred, dipole_list, dipolarophile_list)
-    df_dipole_stat_endothermic = get_statistics_endothermic(strongly_endothermic_dipoles)
+    dipoles_already_covered = df_dipole_stat.dipole_smiles.unique()
+    df_dipole_stat_endothermic = get_statistics_endothermic(strongly_endothermic_dipoles, dipoles_already_covered)
 
     df_dipole_stat_full = pd.concat([df_dipole_stat, df_dipole_stat_endothermic])
     df_dipole_stat_full.to_csv(f'bio_filter_final/dipole_stat_biofrag.csv')

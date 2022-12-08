@@ -6,9 +6,9 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 parser.add_argument('--predictions-file', type=str, required=True,
                     help='input .csv file containing predicted reaction and activation energies')
-parser.add_argument('--threshold-dipolarophiles', type=int, default=25, 
+parser.add_argument('--threshold-dipolarophiles', type=int, default=22, 
                     help='threshold for the mean activation energy of a dipolarophile to gauge intrinsic reactivity')
-parser.add_argument('--threshold-reverse-barrier', type=int, default=25,
+parser.add_argument('--threshold-reverse-barrier', type=int, default=28,
                     help='threshold for the reverse barrier (to ensure irreversibility)')
 parser.add_argument('--max-g-act', type=int, default=25,
                     help='maximal G_act for a dipole-dipolarophile combination to be considered suitable')
@@ -183,21 +183,6 @@ def get_final_filtered_rxn_smiles_synthetic(df_pred, valid_dipolarophiles, min_r
     
     return df_pred[df_pred['final_filter']][['rxn_id', 'rxn_smiles', 'dipole', 'dipolarophile', 
                                             'predicted_activation_energy', 'predicted_reaction_energy']]
-
-
-def reindex_df(df):
-    """re-index a dataframe and rename old index as 'rxn_id'
-
-    Args:
-        df (pd.DataFrame): input dataframe
-
-    Returns:
-        pd.DataFrame: output dataframe
-    """
-    df.reset_index(inplace=True)
-    df = df.rename(columns= {'index':'rxn_id'})
-
-    return df
 
 
 def add_solvent_temp_column(df):
