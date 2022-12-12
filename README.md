@@ -28,7 +28,7 @@ The complete workflow associated with this project can be broken down in the fol
 
 1. Define the search space of dipoles and dipolarophiles (both synthetic and biofragment-based examples), generate a representative dataset of cycloaddition reactions and compute the associated reaction profiles in a high-throughput manner ([link](https://github.com/coleygroup/dipolar_cycloaddition_dataset)).
 2. Compute QM descriptors for each dipole and dipolarophile in a high-throughput manner ([link](https://github.com/tstuyver/QM_desc_autodE)).
-3. Select an appropriate machine learning model architecture (here: multitask GNN ensemble -> [link](xxx)).
+3. Select an appropriate machine learning model architecture (here: multitask GNN ensemble -> [link](https://github.com/tstuyver/multitask_QM_GNN)).
 4. Generate an exhaustive list of reaction SMILES based on all dipole - biofragment-based dipolarophile combinations; generate the QM descriptor input for each generated reaction ([link](https://github.com/coleygroup/bio_orthogonal_click_reactions/blob/main/rxn_smiles_gen/generate_rxn_smiles.py)).
 5. Iterate through an active learning loop to refine the dataset (auxiliary scripts can be found [here](https://github.com/coleygroup/bio_orthogonal_click_reactions/tree/main/screening_files)). This loop consists of the following steps:
       - Train an ML model on the current instance of the dataset.
@@ -39,7 +39,7 @@ The complete workflow associated with this project can be broken down in the fol
       - Select promising synthetic reactions.
       - Sample a subset of the selected promising synthetic reactions, add the competing native reactions involving the dipoles present in this subset and compute the corresponding reaction profiles.
       - Add the newly computed reaction profiles to the dataset and start the next iteration.
-6. Once the dataset is sufficiently enriched with promising bio-orthogonal click reactions, train the model one last time on the final version. Then screen through the chemical space one last time with relaxed selection criteria and generate final estimates for the bio-orthogonal click potential for each of the synthetic reactions in the search space ([link](xxx)).
+6. Once the dataset is sufficiently enriched with promising bio-orthogonal click reactions, train the model one last time on the final version (the final trained model can be found [here](https://github.com/coleygroup/bio_orthogonal_click_reactions/tree/main/final_model)). Then screen through the chemical space one last time with relaxed selection criteria and generate final estimates for the bio-orthogonal click potential for each of the synthetic reactions in the search space ([link](https://github.com/coleygroup/bio_orthogonal_click_reactions/tree/main/final_screening)).
 
 Below, the various auxiliary scripts, directories and repositories developed to (partially) automate this workflow are discussed in more detail.
 
