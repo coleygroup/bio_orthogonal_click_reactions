@@ -55,7 +55,7 @@ A separate repository was set up for the high-throughput computation of QM descr
 
 ## Multitask QM-augmented GNN model
 
-A separate repository was set up for the multitask (QM-augmented) GNN model. It can be accessed [here](https://github.com/tstuyver/multitask_QM_GNN/tree/normal_scaling_ensemble). Instruction on how to run the provided scripts can be found in the associated `README.md` file.
+A separate repository was set up for the multitask (QM-augmented) GNN model. It can be accessed [here](https://github.com/tstuyver/multitask_QM_GNN). Instruction on how to run the provided scripts can be found in the associated `README.md` file.
 
 ## Baseline ML models
 
