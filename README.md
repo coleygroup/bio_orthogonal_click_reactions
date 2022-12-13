@@ -67,7 +67,7 @@ A version of the descriptor input file is included in the `data_files` directory
 ```
 python get_descs.py --csv-file <path to the file containing the rxn-smiles and targets> --atom-descs-file <path to the .pkl-file containing atom descriptors> --reaction-descs-file <path to the .pkl-file containing reaction descriptors>
 ```
-where the `.csv` file, as well as the atom- and reaction-descriptor files are the outputs of the `get_descriptors.py` script in the [QM_desc_autodE](https://github.com/coleygroup/dipolar_cycloaddition_dataset) repository (vide supra).
+where the `.csv` file, as well as the atom- and reaction-descriptor files are the outputs of the `get_descriptors.py` script in the [QM_desc_autodE](https://github.com/tstuyver/QM_desc_autodE) repository (vide supra).
 
 ## Reaction SMILES generation of the search space
 
