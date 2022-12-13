@@ -171,7 +171,7 @@ If (parts of) this workflow are used as part of a publication please cite the as
 xxx
 
 Additionally, please cite the paper in which the dataset generation procedure was presented:
-
+```
 @misc{https://doi.org/10.48550/arxiv.2212.06014,
   doi = {10.48550/ARXIV.2212.06014},
   url = {https://arxiv.org/abs/2212.06014},
@@ -182,6 +182,7 @@ Additionally, please cite the paper in which the dataset generation procedure wa
   year = {2022},
   copyright = {Creative Commons Attribution Non Commercial No Derivatives 4.0 International}
 }
+```
 
 Furthermore, since the workflow makes heavy use of autodE, please also cite the paper in which this code was originally presented:
 ```
