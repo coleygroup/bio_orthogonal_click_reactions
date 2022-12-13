@@ -30,7 +30,7 @@ The complete workflow associated with this project can be broken down in the fol
 2. Compute QM descriptors for each dipole and dipolarophile in a high-throughput manner ([link](https://github.com/tstuyver/QM_desc_autodE)).
 3. Select an appropriate machine learning model architecture (here: multitask GNN ensemble -> [link](https://github.com/tstuyver/multitask_QM_GNN)).
 4. Generate an exhaustive list of reaction SMILES based on all dipole - biofragment-based dipolarophile combinations; generate the QM descriptor input for each generated reaction ([link](https://github.com/coleygroup/bio_orthogonal_click_reactions/blob/main/rxn_smiles_gen/generate_rxn_smiles.py)).
-5. Iterate through an active learning loop to refine the dataset (auxiliary scripts can be found [here](https://github.com/coleygroup/bio_orthogonal_click_reactions/tree/main/screening_files)). This loop consists of the following steps:
+5. Iterate through an active learning loop to refine the dataset (auxiliary scripts can be found [here](https://github.com/coleygroup/bio_orthogonal_click_reactions/tree/main/active_learning)). This loop consists of the following steps:
       - Train an ML model on the current instance of the dataset.
       - Use the trained model to predict activation and reaction energies for all the biofragment-based, i.e., native, reactions.
       - Select promising dipoles for bio-orthogonal click applications based on the predictions made, i.e., retain only the dipoles which are not too reactive with the native dipolarophiles.
