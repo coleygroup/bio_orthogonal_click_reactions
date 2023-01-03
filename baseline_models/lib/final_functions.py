@@ -10,7 +10,7 @@ from sklearn.svm import SVR
 from .bayesian_opt import objective_knn_fp
 from .k_nearest_neighbors import KNN
 
-n_estimator_dict = {0: 10, 1: 30, 2: 50, 3: 100, 4: 200, 5: 300, 6: 400, 7: 600}
+n_estimator_dict = {0: 10, 1: 30, 2: 50, 3: 100, 4: 150, 5: 200, 6: 300, 7: 400, 8: 600}
 min_samples_leaf_dict = {0: 1, 1: 2, 2: 5, 3: 10, 4: 20, 5: 50}
 
 def get_cross_val_accuracy_linear_regression(df, logger, n_fold, split_dir=None):
