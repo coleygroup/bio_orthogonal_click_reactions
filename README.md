@@ -129,9 +129,9 @@ python sample_promising_reactions2.py --promising-reactions-file <.csv file cont
 
 ## Final screening
 
-All the scripts used for the final screening can be found in the `final_screening` directory. The first script, `extract_promising_dipoles.py`, facilitates the selection of promising dipoles, i.e., dipoles which are not too reactive with native dipolarophiles:
+All the scripts used for the final screening can be found in the `final_screening` directory. The first script, `extract_dipoles.py`, facilitates the selection of promising dipoles, i.e., dipoles which are not too reactive with native dipolarophiles:
 ```
-python extract_promising_dipoles.py --predictions-file <input .csv file containing predicted reaction and activation energies> [--threshold-lower <threshold to decide whether a dipole is too reactive with biofragments>]
+python extract_dipoles.py --predictions-file <input .csv file containing predicted reaction and activation energies> [--threshold-lower <threshold to decide whether a dipole is too reactive with biofragments>]
 ```
 The retained dipoles -- together with some additional files containing summarizing statistics -- are stored in a newly generated folder, `bio_filter_final`, as a `.csv` file: `dipoles_above_treshold.csv`.
 
